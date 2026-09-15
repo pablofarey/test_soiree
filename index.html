@@ -505,8 +505,15 @@ document.addEventListener('click', () => toggleMenu(false));
 menu.addEventListener('click', e => e.stopPropagation());
 
 for (const tap of taps) {
-  tap.addEventListener('click', () => show(index + (tap.classList.contains('left') ? -1 : 1)));
+  tap.addEventListener('click', () => {
+    if (menu.hidden) show(index + (tap.classList.contains('left') ? -1 : 1));
+  });
 }
+
+screensHost.addEventListener('click', e => {
+  if (mode !== 'screens' || !menu.hidden) return;
+  show(index + (e.clientX / window.innerWidth < 0.32 ? -1 : 1));
+});
 for (const arrow of arrows.children) {
   arrow.addEventListener('click', e => { e.stopPropagation(); show(index + Number(arrow.dataset.step)); });
 }
