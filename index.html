@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Soirées</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: #0b0b0b;
+    color: #fff;
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #app {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  #backdrop {
+    position: absolute;
+    inset: -8%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(34px) brightness(0.5) saturate(1.2);
+    transform: scale(1.1);
+  }
+
+  #frame {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: opacity 0.18s ease;
+  }
+  #frame.swap { opacity: 0; }
+
+  .shade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 140px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .shade.top { top: 0; background: linear-gradient(rgba(0,0,0,0.55), transparent); }
+  .shade.bottom { bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,0.45)); }
+
+  .tap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 3;
+  }
+  .tap.left { left: 0; width: 32%; }
+  .tap.right { right: 0; width: 68%; }
+
+  #bars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 4px;
+    padding: calc(10px + env(safe-area-inset-top)) 12px 0;
+    z-index: 4;
+  }
+  #bars span {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.32);
+  }
+  #bars span.done { background: #fff; }
+
+  header {
+    position: absolute;
+    top: calc(24px + env(safe-area-inset-top));
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 4;
+  }
+  #picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex: 0 0 auto;
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.42);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  #picker .chevron { font-size: 0.7em; opacity: 0.8; transition: transform 0.15s ease; }
+  #picker[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+  #caption {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #menu {
+    position: absolute;
+    top: calc(70px + env(safe-area-inset-top));
+    left: 12px;
+    z-index: 5;
+    min-width: 210px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 6px;
+    border-radius: 14px;
+    background: rgba(22, 22, 22, 0.94);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  }
+  #menu button {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: 9px;
+    padding: 10px 12px;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+  }
+  #menu button[aria-current="true"] { background: rgba(255, 255, 255, 0.14); }
+  #menu .sub { display: block; font-size: 0.78rem; opacity: 0.55; }
+
+  #empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    z-index: 6;
+  }
+  #empty code {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 5px;
+    padding: 2px 6px;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="backdrop"></div>
+  <img id="frame" alt="">
+  <div class="shade top"></div>
+  <div class="shade bottom"></div>
+
+  <button class="tap left" aria-label="Précédent"></button>
+  <button class="tap right" aria-label="Suivant"></button>
+
+  <div id="bars"></div>
+  <header>
+    <button id="picker" aria-expanded="false"><span id="picker-label"></span><span class="chevron">&#9660;</span></button>
+    <p id="caption"></p>
+  </header>
+  <nav id="menu" hidden></nav>
+</div>
+
+<script>
+const backdrop = document.getElementById('backdrop');
+const frame = document.getElementById('frame');
+const bars = document.getElementById('bars');
+const picker = document.getElementById('picker');
+const pickerLabel = document.getElementById('picker-label');
+const caption = document.getElementById('caption');
+const menu = document.getElementById('menu');
+const app = document.getElementById('app');
+
+const shortDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'short', day: 'numeric' });
+const longDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+const today = toISO(new Date());
+let evenings = [];
+let stories = [];
+let index = 0;
+
+fetch('photos.json', { cache: 'no-store' })
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(data => start(data.evenings || []))
+  .catch(() => fail('Rien &agrave; afficher.<br>Cr&eacute;e un dossier <code>photos/AAAA-MM-JJ_titre/</code>, ' +
+    'd&eacute;pose tes images dedans, puis lance <code>python3 build.py</code>.'));
+
+function fail(html) {
+  const el = document.createElement('div');
+  el.id = 'empty';
+  el.innerHTML = '<div>' + html + '</div>';
+  app.appendChild(el);
+}
+
+function toISO(date) {
+  const pad = n => String(n).padStart(2, '0');
+  return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
+}
+
+function toDate(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function label(item) {
+  return item.date === today ? "Aujourd'hui" : shortDate.format(toDate(item.date));
+}
+
+function start(list) {
+  if (!list.length) return fail('Le dossier <code>photos/</code> est vide.');
+
+  evenings = list;
+  for (const item of evenings) {
+    const button = document.createElement('button');
+    button.appendChild(document.createTextNode(label(item)));
+    const sub = document.createElement('span');
+    sub.className = 'sub';
+    sub.textContent = item.title || longDate.format(toDate(item.date));
+    button.appendChild(sub);
+    button.addEventListener('click', () => { pick(item); toggleMenu(false); });
+    menu.appendChild(button);
+  }
+
+  pick(evenings.find(e => e.date >= today) || evenings[evenings.length - 1]);
+}
+
+function pick(item) {
+  stories = item.date === today ? [item.poster].concat(item.detail) : [item.poster];
+
+  pickerLabel.textContent = label(item);
+  caption.textContent = item.title || longDate.format(toDate(item.date));
+
+  bars.replaceChildren();
+  for (let i = 0; i < stories.length; i++) bars.appendChild(document.createElement('span'));
+
+  show(0);
+  [...menu.children].forEach((button, i) => {
+    button.setAttribute('aria-current', evenings[i] === item ? 'true' : 'false');
+  });
+}
+
+function show(i) {
+  if (i < 0 || i >= stories.length) return;
+  index = i;
+
+  frame.classList.add('swap');
+  const image = new Image();
+  image.onload = () => {
+    frame.src = image.src;
+    backdrop.style.backgroundImage = 'url("' + image.src + '")';
+    frame.classList.remove('swap');
+  };
+  image.src = stories[index];
+
+  [...bars.children].forEach((bar, n) => bar.classList.toggle('done', n <= index));
+  if (stories[index + 1]) new Image().src = stories[index + 1];
+}
+
+function toggleMenu(open) {
+  const next = open === undefined ? menu.hidden : open;
+  menu.hidden = !next;
+  picker.setAttribute('aria-expanded', String(next));
+}
+
+picker.addEventListener('click', e => { e.stopPropagation(); toggleMenu(); });
+document.addEventListener('click', () => toggleMenu(false));
+menu.addEventListener('click', e => e.stopPropagation());
+
+document.querySelector('.tap.left').addEventListener('click', () => show(index - 1));
+document.querySelector('.tap.right').addEventListener('click', () => show(index + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') show(index - 1);
+  if (e.key === 'ArrowRight') show(index + 1);
+  if (e.key === 'Escape') toggleMenu(false);
+});
+
+let touchX = null;
+app.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+app.addEventListener('touchend', e => {
+  if (touchX === null) return;
+  const delta = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(delta) > 50) show(index + (delta < 0 ? 1 : -1));
+  touchX = null;
+}, { passive: true });
+</script>
+
+</body>
+</html>
