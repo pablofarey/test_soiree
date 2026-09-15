@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  .biero {
+    font-family: Archivo, system-ui, sans-serif;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 18px;
+    padding-bottom: 28px;
+  }
+  .biero .block { padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 16px; }
+  .biero .eyebrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .biero .wordmark {
+    font-family: 'Bowlby One SC', Archivo, sans-serif;
+    font-size: clamp(46px, 15vw, 78px);
+    line-height: .86;
+    letter-spacing: -.01em;
+  }
+  .biero .beername {
+    font-family: 'Bowlby One SC', Archivo, sans-serif;
+    font-size: clamp(34px, 10vw, 52px);
+    line-height: .9;
+  }
+  .biero .rule {
+    font-size: clamp(15px, 4.4vw, 20px);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 10px 0;
+  }
+  .biero .specs {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 10px 0;
+  }
+  .biero .prose {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .biero .prose img {
+    flex: 0 0 auto;
+    width: 68px;
+    height: 91px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 8px;
+    padding: 4px;
+  }
+  .biero .prose p { margin: 0; text-wrap: pretty; }
+  .biero .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .biero .tags span { border: 2px solid currentColor; border-radius: 999px; padding: 5px 10px; }
+</style>
+</head>
+<body>
+
+<section class="screen" style="background:#E7E1D5">
+  <div class="biero">
+    <div class="block" style="background:#F6D9A6;color:#2C5F63">
+      <div class="eyebrow"><span>Dégustation · 4 bières</span><span data-event-date>15 septembre 2026</span></div>
+      <div class="wordmark">BIERO</div>
+      <div class="rule" style="border-top:3px solid #2C5F63;border-bottom:3px solid #2C5F63">Le retour aux sources</div>
+      <div class="porteurs" data-ground="#F6D9A6" data-ink="#2C5F63" data-body="#C98246"></div>
+      <div class="eyebrow"><span>Au programme</span></div>
+      <div class="tags"><span>99</span><span>BlindTaste de Chips</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" style="background:#FFD400">
+  <div class="biero">
+    <div class="block" style="color:#123A82">
+      <div class="eyebrow"><span>Bière 01</span><span>Sicile · Italie</span></div>
+      <div class="beername">MESSINA</div>
+      <div class="porteurs" data-ground="#FFD400" data-ink="#123A82" data-body="#123A82"></div>
+      <div class="specs" style="border-top:3px solid #123A82;border-bottom:3px solid #123A82">
+        <span>Lager</span><span>4,7%</span><span>Dal 1923</span><span>Servir 5°C</span>
+      </div>
+      <div class="prose">
+        <img src="photos/2026-09-15_biero/bieres/messina.jpg" alt="Bouteille de Birra Messina">
+        <p>Ricetta classica née à Messine, dans le détroit. Blonde limpide, mousse courte, amertume polie : la bière des fritures et des fins de journée trop chaudes.</p>
+      </div>
+      <div class="tags"><span>Pain blanc</span><span>Agrumes</span><span>Finale sèche</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" style="background:#F2EDE4">
+  <div class="biero">
+    <div class="block" style="color:#1C1A17">
+      <div class="eyebrow"><span>Bière 02</span><span style="color:#D9342A">Sardaigne · Italie</span></div>
+      <div class="beername">ICHNUSA</div>
+      <div class="porteurs" data-ground="#F2EDE4" data-ink="#1C1A17" data-body="#D9342A"></div>
+      <div class="specs" style="border-top:3px solid #1C1A17;border-bottom:3px solid #1C1A17">
+        <span>Lager</span><span>4,7%</span><span>Dal 1912</span><span>Servir 4°C</span>
+      </div>
+      <div class="prose">
+        <img src="photos/2026-09-15_biero/bieres/ichnusa.jpg" alt="Bouteille d'Ichnusa Anima Sarda">
+        <p>Anima sarda : brassée à Assemini depuis 1912, avec les quatre Maures sur l'étiquette. Céréale nette, amertume franche, rien de décoratif.</p>
+      </div>
+      <div class="tags"><span>Céréale</span><span>Amertume</span><span>Iode</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" style="background:#F4EDDD">
+  <div class="biero">
+    <div class="block" style="color:#1F4D40">
+      <div class="eyebrow"><span>Bière 03</span><span style="color:#B93328">Frioul · Italie</span></div>
+      <div class="beername">MORETTI</div>
+      <div class="porteurs" data-ground="#F4EDDD" data-ink="#1F4D40" data-body="#B93328" data-shape="can"></div>
+      <div class="specs" style="border-top:3px solid #1F4D40;border-bottom:3px solid #1F4D40">
+        <span>Premium lager</span><span>4,6%</span><span>Dal 1859</span><span>Servir 5°C</span>
+      </div>
+      <div class="prose">
+        <img src="photos/2026-09-15_biero/bieres/moretti.jpg" alt="Canette de Birra Moretti L'Autentica">
+        <p>L'autentica, et son monsieur au chapeau qui boit depuis 1859. Malt doux, houblon herbacé, amertume discrète : la plus consensuelle des quatre, celle qui met tout le monde d'accord.</p>
+      </div>
+      <div class="tags"><span>Malt doux</span><span>Herbe fraîche</span><span>Très ronde</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" style="background:#14171C">
+  <div class="biero">
+    <div class="block" style="color:#EFEAE0">
+      <div class="eyebrow"><span>Bière 04</span><span style="color:#4FB3E8">Hallertau · Bavière</span></div>
+      <div class="beername" style="color:#4FB3E8">AU WEISS</div>
+      <div class="porteurs" data-ground="#14171C" data-ink="#4FB3E8" data-body="#0E1014"></div>
+      <div class="specs" style="border-top:3px solid #4FB3E8;border-bottom:3px solid #4FB3E8;color:#4FB3E8">
+        <span>Weissbier</span><span>≈5,2%</span><span>Seit 1590</span><span>Servir 7°C</span>
+      </div>
+      <div class="prose">
+        <img src="photos/2026-09-15_biero/bieres/auweiss.jpg" alt="Bouteille d'Au Weiss de la Schlossbrauerei Au-Hallertau">
+        <p>Schlossbrauerei Au-Hallertau, plantée au milieu du plus grand terroir de houblon du monde, le vrai retour aux sources. Trouble, vive, levure de blé, banane et clou de girofle.</p>
+      </div>
+      <div class="tags" style="color:#4FB3E8"><span>Banane</span><span>Girofle</span><span>Blé</span></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  const BOTTLE = 'M118,266 H170 V274 H324 L404,230 H826 q18,0 18,18 V352 q0,18 -18,18 H404 L324,326 H170 V334 H118 Z';
+
+  function vessel(shape, fill) {
+    return shape === 'can'
+      ? '<rect x="256" y="210" width="582" height="180" rx="20" fill="' + fill + '"></rect>'
+      : '<path d="' + BOTTLE + '" fill="' + fill + '"></path>';
+  }
+
+  function carrier(x, ground, ink) {
+    return '<g>' +
+      '<path d="M' + (x + 10) + ',372 L' + (x - 50) + ',498" stroke-width="34"></path>' +
+      '<path d="M' + (x + 78) + ',372 L' + (x + 142) + ',498" stroke-width="34"></path>' +
+      '<path d="M' + (x - 70) + ',505 q-34,-2 -34,18 q0,16 22,16 l46,0 q14,0 14,-16 l0,-18 z" fill="' + ground + '"></path>' +
+      '<path d="M' + (x + 162) + ',505 q34,-2 34,18 q0,16 -22,16 l-46,0 q-14,0 -14,-16 l0,-18 z" fill="' + ground + '"></path>' +
+      '<rect x="' + (x + 2) + '" y="146" width="84" height="230" rx="16" fill="' + ground + '"></rect>' +
+      '<rect x="' + (x - 4) + '" y="48" width="96" height="44" rx="14" fill="' + ink + '"></rect>' +
+      '<rect x="' + (x - 60) + '" y="82" width="74" height="16" rx="8" fill="' + ink + '"></rect>' +
+      '<path d="M' + (x + 2) + ',92 l84,0 l0,44 q0,26 -26,26 l-32,0 q-26,0 -26,-26 z" fill="' + ground + '"></path>' +
+      '<circle cx="' + (x + 30) + '" cy="116" r="6" fill="' + ink + '" stroke="none"></circle>' +
+      '<path d="M' + (x + 22) + ',138 q16,12 30,-2"></path>' +
+      '</g>';
+  }
+
+  function porteurs(ground, ink, body, shape) {
+    return '<svg viewBox="0 0 1000 560" width="100%" style="display:block;overflow:visible">' +
+      '<g stroke="' + ink + '" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" fill="none">' +
+      carrier(256, ground, ink) +
+      carrier(656, ground, ink) +
+      vessel(shape, body) +
+      '<g>' +
+      '<path d="M300,214 L272,296" stroke-width="26"></path>' +
+      '<circle cx="268" cy="302" r="21" fill="' + ground + '"></circle>' +
+      '<path d="M700,214 L806,286" stroke-width="26"></path>' +
+      '<circle cx="812" cy="292" r="21" fill="' + ground + '"></circle>' +
+      '</g></g></svg>';
+  }
+
+  for (const holder of document.querySelectorAll('.porteurs')) {
+    const d = holder.dataset;
+    holder.innerHTML = porteurs(d.ground, d.ink, d.body, d.shape);
+  }
+})();
+</script>
+
+</body>
+</html>

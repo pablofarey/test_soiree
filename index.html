@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Soirées</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -46,6 +49,48 @@
   }
   #frame.swap { opacity: 0; }
 
+  #screens {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1;
+    color: #23201B;
+  }
+  #screens section {
+    min-height: 100%;
+    padding-top: calc(58px + env(safe-area-inset-top));
+    padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+
+  #placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 32px;
+    text-align: center;
+    background: #F6D9A6;
+    color: #2C5F63;
+  }
+  #placeholder p {
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  #placeholder .big {
+    font-family: 'Bowlby One SC', system-ui, sans-serif;
+    font-size: clamp(46px, 15vw, 78px);
+    line-height: .86;
+    letter-spacing: -.01em;
+  }
+
   .shade {
     position: absolute;
     left: 0;
@@ -69,6 +114,33 @@
   .tap.left { left: 0; width: 32%; }
   .tap.right { right: 0; width: 68%; }
 
+  #arrows {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    pointer-events: none;
+    z-index: 4;
+  }
+  #arrows button {
+    pointer-events: auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  #arrows button:disabled { opacity: 0.2; cursor: default; }
+
   #bars {
     position: absolute;
     top: 0;
@@ -77,15 +149,15 @@
     display: flex;
     gap: 4px;
     padding: calc(10px + env(safe-area-inset-top)) 12px 0;
-    z-index: 4;
+    z-index: 5;
   }
   #bars span {
     flex: 1;
     height: 3px;
     border-radius: 2px;
-    background: rgba(255, 255, 255, 0.32);
+    background: rgba(127, 127, 127, 0.45);
   }
-  #bars span.done { background: #fff; }
+  #bars span.done { background: #fff; mix-blend-mode: difference; }
 
   header {
     position: absolute;
@@ -95,7 +167,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    z-index: 4;
+    z-index: 5;
   }
   #picker {
     display: inline-flex;
@@ -105,7 +177,7 @@
     border: 0;
     border-radius: 999px;
     padding: 8px 14px;
-    background: rgba(0, 0, 0, 0.42);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
     color: #fff;
     font: inherit;
@@ -117,19 +189,21 @@
   #picker[aria-expanded="true"] .chevron { transform: rotate(180deg); }
   #caption {
     margin: 0;
+    color: #fff;
     font-size: 0.85rem;
     font-weight: 500;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  #caption.dim { display: none; }
 
   #menu {
     position: absolute;
     top: calc(70px + env(safe-area-inset-top));
     left: 12px;
-    z-index: 5;
+    z-index: 6;
     min-width: 210px;
     max-height: 60vh;
     overflow-y: auto;
@@ -165,7 +239,7 @@
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
     font-size: 0.95rem;
-    z-index: 6;
+    z-index: 7;
   }
   #empty code {
     background: rgba(255, 255, 255, 0.12);
@@ -179,11 +253,23 @@
 <div id="app">
   <div id="backdrop"></div>
   <img id="frame" alt="">
+  <div id="screens" hidden></div>
+
+  <div id="placeholder" hidden>
+    <p id="placeholder-date"></p>
+    <div class="big">À définir</div>
+  </div>
+
   <div class="shade top"></div>
   <div class="shade bottom"></div>
 
   <button class="tap left" aria-label="Précédent"></button>
   <button class="tap right" aria-label="Suivant"></button>
+
+  <div id="arrows" hidden>
+    <button data-step="-1" aria-label="Précédent">&#8249;</button>
+    <button data-step="1" aria-label="Suivant">&#8250;</button>
+  </div>
 
   <div id="bars"></div>
   <header>
@@ -194,21 +280,32 @@
 </div>
 
 <script>
+const app = document.getElementById('app');
 const backdrop = document.getElementById('backdrop');
 const frame = document.getElementById('frame');
+const screensHost = document.getElementById('screens');
+const placeholder = document.getElementById('placeholder');
+const placeholderDate = document.getElementById('placeholder-date');
+const shades = document.querySelectorAll('.shade');
+const taps = document.querySelectorAll('.tap');
+const arrows = document.getElementById('arrows');
 const bars = document.getElementById('bars');
 const picker = document.getElementById('picker');
 const pickerLabel = document.getElementById('picker-label');
 const caption = document.getElementById('caption');
 const menu = document.getElementById('menu');
-const app = document.getElementById('app');
 
 const shortDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'short', day: 'numeric' });
 const longDate = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
 
 const today = toISO(new Date());
+const loaded = new Map();
+
 let evenings = [];
+let mode = 'images';
 let stories = [];
+let sections = [];
+let allSections = [];
 let index = 0;
 
 fetch('photos.json', { cache: 'no-store' })
@@ -257,35 +354,142 @@ function start(list) {
 }
 
 function pick(item) {
-  stories = item.date === today ? [item.poster].concat(item.detail) : [item.poster];
+  const isToday = item.date === today;
 
   pickerLabel.textContent = label(item);
   caption.textContent = item.title || longDate.format(toDate(item.date));
-
-  bars.replaceChildren();
-  for (let i = 0; i < stories.length; i++) bars.appendChild(document.createElement('span'));
-
-  show(0);
   [...menu.children].forEach((button, i) => {
     button.setAttribute('aria-current', evenings[i] === item ? 'true' : 'false');
   });
+
+  if (item.screens) {
+    loadScreens(item.screens)
+      .then(all => showScreens(all, isToday))
+      .catch(() => fail("Les &eacute;crans de cette soir&eacute;e n'ont pas pu &ecirc;tre charg&eacute;s."));
+    return;
+  }
+
+  if (!item.poster) return showPlaceholder(item);
+
+  showImages(isToday ? [item.poster].concat(item.detail) : [item.poster]);
+}
+
+function showPlaceholder(item) {
+  mode = 'placeholder';
+  stories = [];
+  sections = [];
+  allSections = [];
+  index = 0;
+
+  placeholderDate.textContent = longDate.format(toDate(item.date));
+  placeholder.hidden = false;
+  screensHost.hidden = true;
+  frame.hidden = true;
+  backdrop.hidden = true;
+  arrows.hidden = true;
+  taps.forEach(tap => { tap.hidden = true; });
+  shades.forEach(shade => { shade.hidden = true; });
+  caption.classList.add('dim');
+
+  buildBars(1);
+  bars.firstElementChild.classList.add('done');
+}
+
+async function loadScreens(url) {
+  if (loaded.has(url)) return loaded.get(url);
+
+  const response = await fetch(url, { cache: 'no-store' });
+  if (!response.ok) throw new Error('screens');
+  const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+
+  for (const node of doc.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style')) {
+    document.head.appendChild(node.cloneNode(true));
+  }
+
+  const holder = document.createElement('div');
+  holder.dataset.source = url;
+  for (const section of [...doc.body.querySelectorAll('section')]) holder.appendChild(section);
+  screensHost.appendChild(holder);
+
+  for (const script of doc.body.querySelectorAll('script')) {
+    const el = document.createElement('script');
+    el.textContent = script.textContent;
+    document.body.appendChild(el);
+  }
+
+  const all = [...holder.children];
+  loaded.set(url, all);
+  return all;
+}
+
+function showScreens(all, isToday) {
+  mode = 'screens';
+  allSections = all;
+  placeholder.hidden = true;
+  sections = isToday ? all : all.slice(0, 1);
+  stories = [];
+
+  const holder = all[0].parentElement;
+  for (const other of screensHost.children) other.hidden = other !== holder;
+
+  screensHost.hidden = false;
+  frame.hidden = true;
+  backdrop.hidden = true;
+  arrows.hidden = false;
+  taps.forEach(tap => { tap.hidden = true; });
+  shades.forEach(shade => { shade.hidden = true; });
+  caption.classList.add('dim');
+
+  buildBars(sections.length);
+  show(0);
+}
+
+function showImages(list) {
+  mode = 'images';
+  stories = list;
+  placeholder.hidden = true;
+  sections = [];
+
+  screensHost.hidden = true;
+  frame.hidden = false;
+  backdrop.hidden = false;
+  arrows.hidden = true;
+  taps.forEach(tap => { tap.hidden = false; });
+  shades.forEach(shade => { shade.hidden = false; });
+  caption.classList.remove('dim');
+
+  buildBars(stories.length);
+  show(0);
+}
+
+function buildBars(count) {
+  bars.replaceChildren();
+  for (let i = 0; i < count; i++) bars.appendChild(document.createElement('span'));
 }
 
 function show(i) {
-  if (i < 0 || i >= stories.length) return;
+  const count = mode === 'screens' ? sections.length : stories.length;
+  if (i < 0 || i >= count) return;
   index = i;
 
-  frame.classList.add('swap');
-  const image = new Image();
-  image.onload = () => {
-    frame.src = image.src;
-    backdrop.style.backgroundImage = 'url("' + image.src + '")';
-    frame.classList.remove('swap');
-  };
-  image.src = stories[index];
+  if (mode === 'screens') {
+    for (const section of allSections) section.hidden = section !== sections[index];
+    screensHost.scrollTop = 0;
+    arrows.children[0].disabled = index === 0;
+    arrows.children[1].disabled = index === count - 1;
+  } else {
+    frame.classList.add('swap');
+    const image = new Image();
+    image.onload = () => {
+      frame.src = image.src;
+      backdrop.style.backgroundImage = 'url("' + image.src + '")';
+      frame.classList.remove('swap');
+    };
+    image.src = stories[index];
+    if (stories[index + 1]) new Image().src = stories[index + 1];
+  }
 
   [...bars.children].forEach((bar, n) => bar.classList.toggle('done', n <= index));
-  if (stories[index + 1]) new Image().src = stories[index + 1];
 }
 
 function toggleMenu(open) {
@@ -298,8 +502,12 @@ picker.addEventListener('click', e => { e.stopPropagation(); toggleMenu(); });
 document.addEventListener('click', () => toggleMenu(false));
 menu.addEventListener('click', e => e.stopPropagation());
 
-document.querySelector('.tap.left').addEventListener('click', () => show(index - 1));
-document.querySelector('.tap.right').addEventListener('click', () => show(index + 1));
+for (const tap of taps) {
+  tap.addEventListener('click', () => show(index + (tap.classList.contains('left') ? -1 : 1)));
+}
+for (const arrow of arrows.children) {
+  arrow.addEventListener('click', e => { e.stopPropagation(); show(index + Number(arrow.dataset.step)); });
+}
 
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') show(index - 1);
@@ -307,13 +515,16 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') toggleMenu(false);
 });
 
-let touchX = null;
-app.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+let touch = null;
+app.addEventListener('touchstart', e => {
+  touch = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+}, { passive: true });
 app.addEventListener('touchend', e => {
-  if (touchX === null) return;
-  const delta = e.changedTouches[0].clientX - touchX;
-  if (Math.abs(delta) > 50) show(index + (delta < 0 ? 1 : -1));
-  touchX = null;
+  if (!touch) return;
+  const dx = e.changedTouches[0].clientX - touch.x;
+  const dy = e.changedTouches[0].clientY - touch.y;
+  if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.6) show(index + (dx < 0 ? 1 : -1));
+  touch = null;
 }, { passive: true });
 </script>
 
