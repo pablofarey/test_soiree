@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html, body {
     height: 100%;
     margin: 0;
@@ -356,6 +357,7 @@ function start(list) {
 function pick(item) {
   const isToday = item.date === today;
 
+  placeholder.hidden = true;
   pickerLabel.textContent = label(item);
   caption.textContent = item.title || longDate.format(toDate(item.date));
   [...menu.children].forEach((button, i) => {
