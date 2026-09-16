@@ -306,7 +306,6 @@ let evenings = [];
 let mode = 'images';
 let stories = [];
 let sections = [];
-let allSections = [];
 let index = 0;
 
 fetch('photos.json', { cache: 'no-store' })
@@ -355,8 +354,6 @@ function start(list) {
 }
 
 function pick(item) {
-  const isToday = item.date === today;
-
   placeholder.hidden = true;
   pickerLabel.textContent = label(item);
   caption.textContent = item.title || longDate.format(toDate(item.date));
@@ -366,21 +363,20 @@ function pick(item) {
 
   if (item.screens) {
     loadScreens(item.screens)
-      .then(all => showScreens(all, isToday))
+      .then(showScreens)
       .catch(() => fail("Les &eacute;crans de cette soir&eacute;e n'ont pas pu &ecirc;tre charg&eacute;s."));
     return;
   }
 
   if (!item.poster) return showPlaceholder(item);
 
-  showImages(isToday ? [item.poster].concat(item.detail) : [item.poster]);
+  showImages([item.poster].concat(item.detail));
 }
 
 function showPlaceholder(item) {
   mode = 'placeholder';
   stories = [];
   sections = [];
-  allSections = [];
   index = 0;
 
   placeholderDate.textContent = longDate.format(toDate(item.date));
@@ -424,11 +420,10 @@ async function loadScreens(url) {
   return all;
 }
 
-function showScreens(all, isToday) {
+function showScreens(all) {
   mode = 'screens';
-  allSections = all;
   placeholder.hidden = true;
-  sections = isToday ? all : all.slice(0, 1);
+  sections = all;
   stories = [];
 
   const holder = all[0].parentElement;
@@ -437,7 +432,7 @@ function showScreens(all, isToday) {
   screensHost.hidden = false;
   frame.hidden = true;
   backdrop.hidden = true;
-  arrows.hidden = false;
+  arrows.hidden = sections.length < 2;
   taps.forEach(tap => { tap.hidden = true; });
   shades.forEach(shade => { shade.hidden = true; });
   caption.classList.add('dim');
@@ -475,7 +470,7 @@ function show(i) {
   index = i;
 
   if (mode === 'screens') {
-    for (const section of allSections) section.hidden = section !== sections[index];
+    for (const section of sections) section.hidden = section !== sections[index];
     screensHost.scrollTop = 0;
     arrows.children[0].disabled = index === 0;
     arrows.children[1].disabled = index === count - 1;
