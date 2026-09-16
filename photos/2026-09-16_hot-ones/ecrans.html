@@ -22,7 +22,7 @@
   }
   .hotones .poster { width: 100%; max-width: 640px; }
 
-  .hotones .faces { display: flex; justify-content: flex-end; margin-bottom: clamp(24px, 5svh, 48px); }
+  .hotones .faces { display: flex; justify-content: flex-end; gap: clamp(10px, 3vw, 18px); margin-bottom: clamp(24px, 5svh, 48px); }
   .hotones .face {
     width: clamp(88px, 27vw, 140px);
     aspect-ratio: 1;
@@ -31,7 +31,6 @@
     filter: grayscale(1) contrast(1.1);
     opacity: 0.5;
   }
-  .hotones .face-2 { margin-left: clamp(-34px, -8vw, -26px); }
 
   .hotones .eyebrow {
     font-size: clamp(12px, 3.4vw, 14px);
@@ -116,16 +115,15 @@
   }
 
   .hotones .hosts { display: flex; align-items: center; gap: clamp(16px, 5vw, 24px); }
-  .hotones .avatars { display: flex; flex-shrink: 0; }
+  .hotones .avatars { display: flex; flex-shrink: 0; gap: clamp(9px, 2.6vw, 14px); }
   .hotones .avatar {
-    width: clamp(74px, 22vw, 100px);
+    width: clamp(66px, 19vw, 92px);
     aspect-ratio: 1;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #150a06;
     box-shadow: 0 0 0 2px #E8734A;
   }
-  .hotones .avatar:nth-child(2) { margin-left: clamp(-26px, -6vw, -20px); }
   .hotones .hosts-text { font-size: clamp(14px, 3.9vw, 16px); color: #D9C4A9; line-height: 1.45; }
   .hotones .hosts-text b { color: #F3E7D3; display: block; font-size: clamp(16px, 4.5vw, 19px); margin-bottom: 2px; }
 
@@ -167,7 +165,7 @@
     <div class="poster">
       <div class="faces">
         <img class="face" src="photos/2026-09-16_hot-ones/hotes/hote1.png" alt="">
-        <img class="face face-2" src="photos/2026-09-16_hot-ones/hotes/hote2.png" alt="">
+        <img class="face" src="photos/2026-09-16_hot-ones/hotes/hote2.png" alt="">
       </div>
       <div class="eyebrow">Ça va chauffer</div>
       <h1>Soirée<br><span>Hot Ones</span></h1>
