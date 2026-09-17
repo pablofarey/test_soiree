@@ -2,6 +2,9 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@600;700;800;900&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   #screens .entrepotes {
     height: 100svh;
@@ -27,12 +30,271 @@
       transform: translate(-50%, -50%) rotate(90deg);
     }
   }
+
+  #screens .epmenu {
+    box-sizing: border-box;
+    min-height: 100svh;
+    padding-top: calc(clamp(62px, 8.4svh, 78px) + env(safe-area-inset-top));
+    padding-left: clamp(16px, 5vw, 54px);
+    padding-right: clamp(16px, 5vw, 54px);
+    background: #EFE9DA;
+    color: #1B2BC4;
+    font-family: Archivo, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6px, 1.4svh, 18px);
+  }
+  .epmenu .masthead { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+  .epmenu .kicker { font-size: clamp(8.5px, 2.4vw, 11px); letter-spacing: .38em; text-transform: uppercase; font-weight: 600; }
+  .epmenu h1 {
+    margin: 0;
+    font-family: Gabarito, Archivo, sans-serif;
+    font-weight: 900;
+    font-size: clamp(28px, min(11vw, 5.4svh), 68px);
+    line-height: .86;
+    letter-spacing: -.03em;
+    text-transform: lowercase;
+  }
+  .epmenu .sub { font-size: clamp(9.5px, 2.7vw, 12px); letter-spacing: .28em; text-transform: uppercase; font-weight: 700; }
+  .epmenu .art { display: flex; align-items: center; justify-content: center; }
+  .epmenu .deco { display: block; width: 100%; height: auto; max-height: clamp(44px, 11svh, 150px); }
+  .epmenu:not(.plats) .deco { max-height: clamp(60px, 14svh, 200px); }
+  .epmenu main { margin-block: auto; display: flex; flex-direction: column; gap: clamp(9px, 2svh, 34px); }
+  .epmenu .head {
+    border-top: 3px solid #1B2BC4;
+    padding-top: clamp(4px, 0.8svh, 8px);
+    margin-bottom: clamp(5px, 1.1svh, 14px);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .epmenu h2 {
+    margin: 0;
+    font-family: Gabarito, Archivo, sans-serif;
+    font-weight: 800;
+    font-size: clamp(20px, 5.6vw, 33px);
+    line-height: 1;
+    letter-spacing: -.01em;
+  }
+  .epmenu .head span { font-size: clamp(8.5px, 2.2vw, 10.5px); letter-spacing: .2em; text-transform: uppercase; font-weight: 700; white-space: nowrap; }
+  .epmenu ul { list-style: none; margin: 0; padding: 0; }
+  .epmenu .dishes { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(5px, 1.2svh, 19px) clamp(14px, 4vw, 34px); }
+  .epmenu .name { font-weight: 700; font-size: clamp(12.5px, 3.5vw, 18px); line-height: 1.16; }
+  .epmenu .note { font-style: italic; font-size: clamp(10px, 2.8vw, 13.5px); line-height: 1.3; opacity: .85; }
+  .epmenu footer {
+    border: 2.4px solid #1B2BC4;
+    padding: clamp(8px, 1.4svh, 14px) 14px;
+    text-align: center;
+    font-size: clamp(8.5px, 2.3vw, 11.5px);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .epmenu .drinks { display: flex; flex-direction: column; gap: clamp(13px, 2.8svh, 30px); }
+  .epmenu .drinks .line { display: flex; align-items: baseline; gap: 12px; }
+  .epmenu .drinks .name { font-family: Gabarito, Archivo, sans-serif; font-weight: 700; font-size: clamp(19px, 5.4vw, 26px); line-height: 1.1; }
+  .epmenu .dots { flex: 1; border-bottom: 1.5px dotted #1B2BC4; opacity: .55; transform: translateY(-4px); }
+  .epmenu .finale { border-top: 3px solid #1B2BC4; padding-top: 12px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 18px; }
+  .epmenu .finale h2 { white-space: nowrap; }
+
+  /* Ecran court : le menu est dense, l'illustration cede la place au texte. */
+  @media (max-height: 790px) {
+    .epmenu.plats .art { display: none; }
+  }
+
+  @media (min-width: 560px) {
+    .epmenu .finale .note { text-align: right; }
+    .epmenu .drinks li { display: flex; align-items: baseline; gap: 16px; }
+    .epmenu .drinks .line { flex: 1; }
+    .epmenu .drinks .note { text-align: right; max-width: 46%; }
+  }
 </style>
 </head>
 <body>
 
 <section class="screen entrepotes">
   <img src="photos/2026-09-17_entrepotes/affiche/entrepotes.jpg" alt="L'Entrepotes">
+</section>
+
+<section class="screen epmenu plats">
+    <div class="masthead">
+      <div class="kicker">Table d'amis &nbsp;·&nbsp; Au bord de l'eau</div>
+      <h1>L'entrepote</h1>
+      <div class="sub">Menu du jour &nbsp;·&nbsp; Bière à volonté</div>
+    </div>
+    <div class="art">
+      <svg viewBox="0 0 960 380" class="deco" fill="none" stroke="#1B2BC4" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 252 H930" stroke-width="3" />
+      <path d="M600 252 v-108 M690 252 v-108 M800 252 v-108 M890 252 v-108" />
+      <path d="M572 144 H920" stroke-width="4.2" />
+      <g stroke-width="2.6">
+      <path d="M700 252 l88 -96 M788 252 l-88 -96 M700 204 l48 -52 M744 252 l44 -48" />
+      </g>
+      <path d="M584 132 c14 -30 52 -26 56 2 c22 -30 60 -22 62 6 c20 -34 62 -26 64 4 c24 -28 62 -18 58 10 c30 -22 66 2 52 26" stroke-width="3" />
+      <path d="M600 128 c-20 -26 10 -50 34 -34 c-4 -28 40 -36 52 -12 c14 -24 54 -18 56 8 c26 -20 58 4 44 30" stroke-width="2.8" />
+      <path d="M648 118 c-26 8 -22 38 4 32 c-24 10 -14 40 10 34" stroke-width="2.6" />
+      <path d="M842 116 c26 10 20 40 -6 34 c22 12 12 42 -12 34" stroke-width="2.6" />
+      <g stroke-width="2.6">
+      <path d="M616 148 v18 M660 148 v26 M712 148 v16 M760 148 v24 M828 148 v18 M872 148 v26" />
+      </g>
+      <path d="M60 252 v-104 M360 252 v-104" />
+      <path d="M44 148 H376 L344 96 H76 Z" />
+      <g stroke-width="2.6">
+      <path d="M56 132 h308 M66 116 h288" />
+      </g>
+      <path d="M60 252 H360" stroke-width="4" />
+      <path d="M100 246 v-46 a35 35 0 0 1 70 0 v46 Z" fill="#1B2BC4" stroke="#1B2BC4" />
+      <path d="M212 246 v-46 a35 35 0 0 1 70 0 v46 Z" fill="#1B2BC4" stroke="#1B2BC4" />
+      <g stroke="#EFE9DA" stroke-width="3">
+      <path d="M135 170 v76 M100 208 h70 M247 170 v76 M212 208 h70" />
+      </g>
+      <g stroke-width="2.4">
+      <path d="M310 206 h28 M310 186 h20 M310 226 h24 M76 196 h18 M76 220 h14" />
+      </g>
+      <path d="M214 276 H820 L920 366 H118 Z" stroke-width="4.4" />
+      <path d="M244 292 H796 L878 352 H166 Z" fill="#1B2BC4" stroke="none" />
+      <g stroke="#EFE9DA" stroke-width="3.4">
+      <path d="M300 312 q30 -12 60 0 t60 0 t60 0 t60 0" />
+      <path d="M260 336 q32 -13 64 0 t64 0 t64 0 t64 0" />
+      <path d="M600 314 q30 -12 60 0 t60 0" />
+      </g>
+      </svg>
+    </div>
+    <main>
+      <div class="course">
+        <div class="head"><h2>Entrées</h2><span>Pour commencer</span></div>
+        <ul class="dishes">
+        <li>
+          <div class="name">Trio d'automne</div>
+          <div class="note">Potimarron, patisson et butternut</div>
+        </li>
+        <li>
+          <div class="name">Gravlax de saumon</div>
+          <div class="note">Baies et aneth</div>
+        </li>
+        <li>
+          <div class="name">Saint-Félicien rôti</div>
+          <div class="note">Miel, romarin et focaccia</div>
+        </li>
+        </ul>
+      </div>
+      <div class="course">
+        <div class="head"><h2>Plats</h2><span>Ensuite, au choix</span></div>
+        <ul class="dishes">
+        <li>
+          <div class="name">Pièce du boucher</div>
+          <div class="note">Son accordéon de pomme de terre, jus corsé</div>
+        </li>
+        <li>
+          <div class="name">Tagliatelle de courgette</div>
+          <div class="note">Pesto et fromage frais</div>
+        </li>
+        <li>
+          <div class="name">Nouilles façon asiatique</div>
+          <div class="note">Poulet, légumes croquants, sauce soja-gingembre</div>
+        </li>
+        </ul>
+      </div>
+      <div class="course">
+        <div class="head"><h2>Desserts</h2><span>Pour finir</span></div>
+        <ul class="dishes">
+        <li>
+          <div class="name">Panna cotta au jasmin</div>
+          <div class="note">Fleur infusée</div>
+        </li>
+        <li>
+          <div class="name">Tiramisu de ma grand-mère</div>
+          <div class="note">La vraie recette, celle du carnet</div>
+        </li>
+        <li>
+          <div class="name">Coulant au chocolat</div>
+          <div class="note">Cœur fondant, crème fraîche</div>
+        </li>
+        <li>
+          <div class="name">Café gourmand</div>
+          <div class="note">Expresso et sa ronde de mignardises</div>
+        </li>
+        </ul>
+      </div>
+    </main>
+    <footer>Servis avec bonheur &nbsp;·&nbsp; Les pieds sous la table et la bière à la main</footer>
+</section>
+
+<section class="screen epmenu">
+    <div class="masthead">
+      <div class="kicker">Table d'amis &nbsp;·&nbsp; Au bord de l'eau</div>
+      <h1>L'entrepote</h1>
+      <div class="sub">Carte des boissons</div>
+    </div>
+    <div class="art">
+      <svg viewBox="0 0 960 380" class="deco" fill="none" stroke="#1B2BC4" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 252 H930" stroke-width="3" />
+      <path d="M600 252 v-108 M690 252 v-108 M800 252 v-108 M890 252 v-108" />
+      <path d="M572 144 H920" stroke-width="4.2" />
+      <g stroke-width="2.6">
+      <path d="M700 252 l88 -96 M788 252 l-88 -96 M700 204 l48 -52 M744 252 l44 -48" />
+      </g>
+      <path d="M584 132 c14 -30 52 -26 56 2 c22 -30 60 -22 62 6 c20 -34 62 -26 64 4 c24 -28 62 -18 58 10 c30 -22 66 2 52 26" stroke-width="3" />
+      <path d="M600 128 c-20 -26 10 -50 34 -34 c-4 -28 40 -36 52 -12 c14 -24 54 -18 56 8 c26 -20 58 4 44 30" stroke-width="2.8" />
+      <path d="M648 118 c-26 8 -22 38 4 32 c-24 10 -14 40 10 34" stroke-width="2.6" />
+      <path d="M842 116 c26 10 20 40 -6 34 c22 12 12 42 -12 34" stroke-width="2.6" />
+      <g stroke-width="2.6">
+      <path d="M616 148 v18 M660 148 v26 M712 148 v16 M760 148 v24 M828 148 v18 M872 148 v26" />
+      </g>
+      <path d="M60 252 v-104 M360 252 v-104" />
+      <path d="M44 148 H376 L344 96 H76 Z" />
+      <g stroke-width="2.6">
+      <path d="M56 132 h308 M66 116 h288" />
+      </g>
+      <path d="M60 252 H360" stroke-width="4" />
+      <path d="M100 246 v-46 a35 35 0 0 1 70 0 v46 Z" fill="#1B2BC4" stroke="#1B2BC4" />
+      <path d="M212 246 v-46 a35 35 0 0 1 70 0 v46 Z" fill="#1B2BC4" stroke="#1B2BC4" />
+      <g stroke="#EFE9DA" stroke-width="3">
+      <path d="M135 170 v76 M100 208 h70 M247 170 v76 M212 208 h70" />
+      </g>
+      <g stroke-width="2.4">
+      <path d="M310 206 h28 M310 186 h20 M310 226 h24 M76 196 h18 M76 220 h14" />
+      </g>
+      <path d="M214 276 H820 L920 366 H118 Z" stroke-width="4.4" />
+      <path d="M244 292 H796 L878 352 H166 Z" fill="#1B2BC4" stroke="none" />
+      <g stroke="#EFE9DA" stroke-width="3.4">
+      <path d="M300 312 q30 -12 60 0 t60 0 t60 0 t60 0" />
+      <path d="M260 336 q32 -13 64 0 t64 0 t64 0 t64 0" />
+      <path d="M600 314 q30 -12 60 0 t60 0" />
+      </g>
+      </svg>
+    </div>
+    <main>
+      <div class="course">
+        <div class="head"><h2>Au verre</h2><span>Servis frais</span></div>
+        <ul class="drinks">
+          <li>
+            <div class="line"><div class="name">Ti-punch</div><div class="dots"></div></div>
+            <div class="note">Rhum agricole, citron vert, sucre de canne</div>
+          </li>
+          <li>
+            <div class="line"><div class="name">Bière</div><div class="dots"></div></div>
+            <div class="note">Pression bien fraîche, à volonté</div>
+          </li>
+          <li>
+            <div class="line"><div class="name">Cocktail du chef</div><div class="dots"></div></div>
+            <div class="note">Ce qu'il a sous la main, et c'est tant mieux</div>
+          </li>
+          <li>
+            <div class="line"><div class="name">Ricard et ses déclinaisons</div><div class="dots"></div></div>
+            <div class="note">Tomate, perroquet, mauresque</div>
+          </li>
+        </ul>
+      </div>
+      <div class="finale">
+        <h2>Bière à volonté</h2>
+        <div class="note">Tant qu'il en reste, et qu'on tient debout</div>
+      </div>
+    </main>
+    <footer>Servis avec bonheur &nbsp;·&nbsp; Les pieds sous la table et la bière à la main</footer>
 </section>
 
 </body>
