@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<style>
+  #screens .entrepotes {
+    height: 100svh;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    background: #F3EDDF;
+  }
+  .entrepotes img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+  }
+  /* Ecran tenu droit : l'image bascule en paysage pour remplir toute la dalle. */
+  @media (orientation: portrait) {
+    .entrepotes img {
+      width: 100svh;
+      height: 100svw;
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+  }
+</style>
+</head>
+<body>
+
+<section class="screen entrepotes">
+  <img src="photos/2026-09-17_entrepotes/affiche/entrepotes.jpg" alt="L'Entrepotes">
+</section>
+
+</body>
+</html>
